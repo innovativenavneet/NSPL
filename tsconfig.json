@@ -1,17 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "strict": true,                  // Enable strict mode
+    "allowJs": true,                 // Allow JavaScript files
+    "checkJs": false,                // Disable type checking for JavaScript files
+    "jsx": "react-native",           // Ensure React Native JSX is supported
+    "moduleResolution": "node",      // Use Node module resolution strategy
+    "target": "esnext",              // Use the latest ECMAScript version
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]                 // Set up path aliases
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "**/*.ts",                       // Include all TypeScript files
+    "**/*.tsx",                      // Include all TypeScript JSX files
+    "**/*.js",                       // Include JavaScript files
+    "**/*.jsx",                      // Include JSX files
+    ".expo/types/**/*.ts",           // Include Expo types
+    "expo-env.d.ts"                  // Include Expo environment types
   ]
 }
