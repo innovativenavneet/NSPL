@@ -6,7 +6,7 @@ import * as Font from 'expo-font';
 
 const MatchType = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const navigation = useNavigation(); // Use navigation hook for routing
+  const navigation = useNavigation(); 
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -40,7 +40,7 @@ const MatchType = () => {
       <View style={styles.onebutton}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('LeatherMatch')} // Route to Leather Match screen
+          onPress={() => navigation.navigate('Footer')} // Route to Leather Match screen
         >
           
           <Text style={styles.buttonText}>Women's Match</Text>
@@ -56,7 +56,7 @@ const MatchType = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('TennisMatch')} 
+          onPress={() => navigation.navigate('Footer')} 
         >
         
           <Text style={styles.buttonText}>Men's Match</Text>
