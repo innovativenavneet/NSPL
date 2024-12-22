@@ -1,19 +1,38 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+
 import HomeScreen from "../user/HomeScreen";
 import PlayersScreen from "../user/PlayerScreen";
 import MatchesScreen from '../user/MatchesScreen';
 import SettingsScreen from '../user/SettingsScreen';
+import DetailView from '../user/DetailView'; 
 
+const Tab = createBottomTabNavigator();
+const HomeStack = createStackNavigator();
 
-const Tab = createBottomTabNavigator(); 
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen 
+        name="HomeMain" 
+        component={HomeScreen} 
+        options={{ headerShown: false }} 
+      />
+      <HomeStack.Screen 
+        name="DetailView" 
+        component={DetailView} 
+        options={{ headerShown: false }} 
+      />
+    </HomeStack.Navigator>
+  );
+}
 
 export default function App() {
   return (
-
+  
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -39,21 +58,11 @@ export default function App() {
           headerShown: false, 
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Players" component={PlayersScreen} />
         <Tab.Screen name="Matches" component={MatchesScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
- 
+
   );
 }
-
-// Global StyleSheet
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  },
-});

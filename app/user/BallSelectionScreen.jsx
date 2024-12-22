@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   onebutton: {
     position: 'absolute',
-    top: 210, // 10px below header (header top + height + 10px)
+    top: 180, // 10px below header (header top + height + 10px)
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   secondbutton: {
     position: 'absolute',
-    bottom: 210, // 30px above the bottom
+    bottom: 180, // 30px above the bottom
     left: 0,
     right: 0,
     alignItems: 'center',

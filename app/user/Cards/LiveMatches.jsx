@@ -1,5 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+// import * as Font from 'expo-font';
+
+// const LiveMatches = () => {
+//   const [fontsLoaded, setFontsLoaded] = useState(false);
+//   const [data, setData] = useState({
+//     match: "Test 3 of 3 (ENG leads 2-0) - Ends of day 1",
+//     status: "Live",
+//     team1: "New Zealand",
+//     score1: "315/9 (82)",
+//     team2: "England",
+//     score2: "Yet to bat",
+//     note: "ENG chose to bowl",
+//     championship: "T20 Men's Championship",
+//   });
+
+//   useEffect(() => {
+//     const loadFonts = async () => {
+//       await Font.loadAsync({
+//         OpenSans: require('../../../assets/fonts/OpenSans-Regular.ttf'),
+//         OpenSansBold: require('../../../assets/fonts/OpenSans-Bold.ttf'),
+//       });
+//       setFontsLoaded(true);
+//     };
+
+//     loadFonts();
+//   }, []);
+
+//   // Show a loading spinner while fonts are loading
+//   if (!fontsLoaded) {
+//     return (
+//       <View style={styles.loadingContainer}>
+//         <ActivityIndicator size="large" color="#13808B" />
+//         <Text>Loading...</Text>
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.headerContainer}>
+//         <Image
+//           source={require('../../../assets/startingflow/CricketBall.png')}
+//           style={styles.logo}
+//         />
+//         <Text style={styles.header}>Live Matches</Text>
+//       </View>
+
+//       <View style={styles.card}>
+//       <View style={styles.teamsContainer}>
+//         <Text style={styles.title}>{data.match}</Text>
+//         <Text style={styles.status}>{data.status}</Text>
+//       </View>
+//         <View style={styles.teamsContainer}>
+//           <Text style={styles.team}>{data.team1}</Text>
+//           <Text style={styles.score}>{data.score1}</Text>
+//         </View>
+
+//         <View style={styles.teamsContainer}>
+//           <Text style={styles.team}>{data.team2}</Text>
+//           <Text style={styles.score}>{data.score2}</Text>
+//         </View>
+
+//         <Text style={styles.note}>{data.note}</Text>
+//         <Text style={styles.championship}>{data.championship}</Text>
+//       </View>
+
+//       <TouchableOpacity style={styles.viewDetailsButton}>
+//         <Text style={styles.viewDetailsText}>View Details</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 
 const LiveMatches = () => {
@@ -15,6 +90,8 @@ const LiveMatches = () => {
     championship: "T20 Men's Championship",
   });
 
+  const navigation = useNavigation(); 
+
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
@@ -27,7 +104,6 @@ const LiveMatches = () => {
     loadFonts();
   }, []);
 
-  // Show a loading spinner while fonts are loading
   if (!fontsLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -48,15 +124,14 @@ const LiveMatches = () => {
       </View>
 
       <View style={styles.card}>
-      <View style={styles.teamsContainer}>
-        <Text style={styles.title}>{data.match}</Text>
-        <Text style={styles.status}>{data.status}</Text>
-      </View>
+        <View style={styles.teamsContainer}>
+          <Text style={styles.title}>{data.match}</Text>
+          <Text style={styles.status}>{data.status}</Text>
+        </View>
         <View style={styles.teamsContainer}>
           <Text style={styles.team}>{data.team1}</Text>
           <Text style={styles.score}>{data.score1}</Text>
         </View>
-
         <View style={styles.teamsContainer}>
           <Text style={styles.team}>{data.team2}</Text>
           <Text style={styles.score}>{data.score2}</Text>
@@ -66,12 +141,19 @@ const LiveMatches = () => {
         <Text style={styles.championship}>{data.championship}</Text>
       </View>
 
-      <TouchableOpacity style={styles.viewDetailsButton}>
+      <TouchableOpacity 
+        style={styles.viewDetailsButton} 
+        onPress={() => navigation.navigate('DetailView')}
+      >
         <Text style={styles.viewDetailsText}>View Details</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+export default LiveMatches;
+
+// Add your existing styles here.
 
 const styles = StyleSheet.create({
   container: {
@@ -159,4 +241,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LiveMatches;

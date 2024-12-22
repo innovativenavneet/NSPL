@@ -51,6 +51,7 @@ const UpcomingMatches = () => {
       ))}
     <TouchableOpacity style={styles.viewDetailsButton}>
             <Text style={styles.viewDetailsText}>View Details</Text>
+          
           </TouchableOpacity>
     </View>
   );
