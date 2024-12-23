@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AdminScreen from './AdminScreen';  // Example screen
-
+import AdminScreen from './AdminScreen';  
 const Stack = createNativeStackNavigator();
 
 export default function AdminStack() {

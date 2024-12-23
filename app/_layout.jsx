@@ -4,29 +4,27 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import AdminStack from './admin/AdminStack';  // Ensure AdminStack doesn't have its own NavigationContainer
-import UserStack from './user/UserStack';    // Ensure UserStack doesn't have its own NavigationContainer
-
+import UserStack from './user/UserStack';    
 import { useColorScheme } from '@/hooks/useColorScheme';
+
 const Stack = createNativeStackNavigator();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const [isAdmin, setIsAdmin] = useState(false); // Admin state is false initially
+  // const [isAdmin, setIsAdmin] = useState(false); 
   const [appReady, setAppReady] = useState(false);
 
-  // Load custom fonts
   const [fontsLoaded] = useFonts({
     OpenSansRegular: require('../assets/fonts/OpenSans-Regular.ttf'),
   });
 
-  // Prevent auto-hiding the splash screen
   useEffect(() => {
+    // async function will not block resources 
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync();
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate asset loading
+        await new Promise((resolve) => setTimeout(resolve, 1000)); 
       } catch (e) {
         console.warn(e);
       } finally {
@@ -44,7 +42,7 @@ export default function RootLayout() {
     }
   }, [appReady, fontsLoaded]);
 
-  // Show nothing until the app is fully ready
+ 
   if (!appReady || !fontsLoaded) {
     return null;
   }
@@ -53,10 +51,10 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 
       <Stack.Navigator>
-        {isAdmin ? (
+        {/* {isAdmin ? (
           <Stack.Screen
             name="AdminStack"
-            component={AdminStack}  // AdminStack is a component here
+            component={AdminStack}  
             options={{ headerShown: false }}
           />
         ) : (
@@ -68,7 +66,13 @@ export default function RootLayout() {
               <UserStack onAdminAccess={() => setIsAdmin(true)} />  // Pass function to toggle admin
             )}
           </Stack.Screen>
-        )}
+        )} */}
+
+        <Stack.Screen
+            name="UserStack"
+            component={UserStack}  
+            options={{ headerShown: false }}
+          ></Stack.Screen>
       </Stack.Navigator>
 </ThemeProvider>
   );

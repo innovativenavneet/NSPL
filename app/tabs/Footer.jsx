@@ -32,37 +32,38 @@ function HomeStackScreen() {
 
 export default function App() {
   return (
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        console.log('Rendering icon:', route.name);
+        let iconName;
   
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Players') {
-              iconName = focused ? 'person' : 'person-outline';
-            } else if (route.name === 'Matches') {
-              iconName = focused ? 'baseball' : 'baseball-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'settings' : 'settings-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: 'black', 
-          tabBarInactiveTintColor: 'white', 
-          tabBarStyle: {
-            backgroundColor: '#13808B', 
-          },
-          headerShown: false, 
-        })}
-      >
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Players" component={PlayersScreen} />
-        <Tab.Screen name="Matches" component={MatchesScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
+        if (route.name === 'Home') {
+          iconName = focused ? 'home' : 'home-outline';
+        } else if (route.name === 'Players') {
+          iconName = focused ? 'person' : 'person-outline';
+        } else if (route.name === 'Matches') {
+          iconName = focused ? 'baseball' : 'baseball-outline';
+        } else if (route.name === 'Settings') {
+          iconName = focused ? 'settings' : 'settings-outline';
+        }
+  
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: 'black', // Gold for active icons
+      tabBarInactiveTintColor: '#FFFFFF', // White for inactive icons
+      tabBarStyle: {
+        backgroundColor: '#13808B', // Dark teal background
+      },
+      headerShown: false, // Hide headers in tab screens
+    })}
+  >
+    <Tab.Screen name="Home" component={HomeStackScreen} />
+    <Tab.Screen name="Players" component={PlayersScreen} />
+    <Tab.Screen name="Matches" component={MatchesScreen} />
+    <Tab.Screen name="Settings" component={SettingsScreen} />
+  </Tab.Navigator>
+  
 
   );
 }

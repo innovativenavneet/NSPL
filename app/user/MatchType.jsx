@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, requireNativeComponent } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, requireNativeComponent, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 
-const MatchType = () => {
+export default function BallSelectionScreen({ onAdminAccess }) {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const navigation = useNavigation(); 
 
@@ -29,12 +29,15 @@ const MatchType = () => {
       {/* Header with logo and admin button */}
       <View style={styles.header}>
         <Image source={require('../../assets/startingflow/logo.png')} style={styles.logo} />
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AdminScreen')} // Route to Admin Screen
+   <TouchableOpacity
+          onPress={onAdminAccess}
         >
-          <Image source={require('../../assets/startingflow/human.png')} style={styles.userIcon} />
-        </TouchableOpacity>
-      </View>
+          <Image
+            source={require("../../assets/startingflow/human.png")}
+            style={styles.userIcon}
+          />
+        </TouchableOpacity>    
+          </View>
 
       {/* First button positioned 10px below the header */}
       <View style={styles.onebutton}>
@@ -139,4 +142,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MatchType;
