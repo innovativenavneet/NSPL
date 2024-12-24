@@ -8,7 +8,7 @@ const SettingsScreen = () => {
   const handleLogout = () => {
     // Add logout functionality here
     console.log('User logged out');
-    navigation.navigate('LoginScreen'); 
+    navigation.navigate('AdminScreen'); 
   };
 
   const handleOtherAction = (actionName) => {

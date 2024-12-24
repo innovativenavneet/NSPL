@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "193652677453",
+    "project_id": "nspl-app-19f4e",
+    "storage_bucket": "nspl-app-19f4e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193652677453:android:1a3de2cb02bbc4778b3504",
+        "android_client_info": {
+          "package_name": "nspl.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACFqWwLACi-MfCsuZxtsEdQQHJ0SNMyio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
