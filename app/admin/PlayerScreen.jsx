@@ -12,7 +12,7 @@ const PlayerCard = ({ name, role, keyStats, status, born }) => (
       <Text style={styles.playerBorn}>Born: {born}</Text>
     </View>
     <TouchableOpacity style={styles.viewMoreButton}>
-      <Text style={styles.viewMoreText}>View More</Text>
+      <Text style={styles.viewMoreText}>Update info</Text>
     </TouchableOpacity>
   </View>
 );

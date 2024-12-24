@@ -4,13 +4,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-
 const MatchHighlights = () => {
   const matchData = [
     {
-      match: "India vs Pakistan",
-      youtubeLink: "https://www.youtube.com/watch?v=WQdqgrWvy6g&ab_channel=AsianCricketCouncil", // Replace with actual YouTube link
+      match: "Madhya Pradesh Vs Uttarakhand",
+      youtubeLink: "https://www.youtube.com/watch?v=QB-duA7lrLc&ab_channel=NAYABSPORTSPLAYER%27SLEAGUE", // Replace with actual YouTube link
     },
     {
-      match: "India vs Sri Lanka",
-      youtubeLink: "https://www.youtube.com/watch?v=vdNrPdeEuYQ&ab_channel=AsianCricketCouncil", // Replace with actual YouTube link
-    }
+      match: "Jharkhand Vs Chattisgarh",
+      youtubeLink: "https://www.youtube.com/watch?v=vMk0G2Xg7zU&ab_channel=NAYABSPORTSPLAYER%27SLEAGUE",
+    },
   ];
 
   const openYoutubeLink = (url) => {

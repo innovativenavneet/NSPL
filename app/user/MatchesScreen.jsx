@@ -1,14 +1,12 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import Header from "../tabs/HeaderUser"; // Ensure this path is correct
-
+import Header from "../tabs/HeaderUser"; 
+import UpcomingMatches from './Cards/UpcomingMatches/UpcomingMatches';
 export default function MatchesScreen() {
   return (
     <View style={styles.container}>
       <Header /> 
-      <View style={styles.content}>
-        <Text>hello i am MatchesScreen .</Text>
-      </View>
+      <UpcomingMatches/>
     </View>
   );
 }
@@ -17,12 +15,13 @@ export default function MatchesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',  // Start from top of the screen
+    justifyContent: 'flex-start', 
+    backgroundColor: '#BBBDB3', 
   },
   content: {
     flex: 1,
-    justifyContent: 'center',  // Center content vertically
+    justifyContent: 'center', 
     alignItems: 'center',
-    paddingTop: 20,  // Add padding to adjust for header space
+    paddingTop: 20, 
   },
 });

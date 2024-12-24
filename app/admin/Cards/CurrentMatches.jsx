@@ -47,7 +47,7 @@ const LiveMatches = () => {
           source={require('../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
         />
-        <Text style={styles.header}>Live Matches</Text>
+        <Text style={styles.header}>CurrentMatches</Text>
       </View>
 
       <View style={styles.card}>
@@ -70,9 +70,9 @@ const LiveMatches = () => {
 
       <TouchableOpacity 
         style={styles.viewDetailsButton} 
-        onPress={() => navigation.navigate('DetailView')}
+        onPress={() => navigation.navigate('MatchForm')}
       >
-        <Text style={styles.viewDetailsText}>View Details</Text>
+        <Text style={styles.viewDetailsText}>Update</Text>
       </TouchableOpacity>
     </View>
   );

@@ -1,17 +1,15 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
-import Header from "../tabs/HeaderUser";
-import LiveMatches from './Cards/LiveMatches';
-import MatchHighlights from './Cards/MatchHighlights';
+import { View, FlatList, StyleSheet, Dimensions,Text } from 'react-native';
+import Header from "../tabs/HeaderAdmin";
+import CurrentMatches from './Cards/CurrentMatches';
 import UpcomingMatches from './Cards/UpcomingMatches/UpcomingMatches';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const data = [
-    { key: '1', component: <LiveMatches /> },
+    { key: '1', component: <CurrentMatches /> },
     { key: '2', component: <UpcomingMatches /> },
-    { key: '3', component: <MatchHighlights /> },
   ];
   
   const renderItem = ({ item }) => (
@@ -23,6 +21,12 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Header />
+      <View>
+      <Text style={styles.title}>
+        Welcome Back Admin !
+      </Text>
+      </View>
+   
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -42,5 +46,10 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingBottom: 10, 
   },
-
+  title: {
+    color: 'black',
+    fontSize: 30,
+    fontWeight: '500',
+    marginHorizontal: 50,
+  }
 });

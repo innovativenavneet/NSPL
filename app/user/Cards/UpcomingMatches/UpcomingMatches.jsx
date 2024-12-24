@@ -25,7 +25,7 @@ const UpcomingMatches = () => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image
-          source={require('../../../assets/startingflow/CricketBall.png')}
+          source={require('../../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
         />
         <Text style={styles.header}>Upcoming Matches</Text>
