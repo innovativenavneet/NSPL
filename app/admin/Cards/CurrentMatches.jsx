@@ -1,37 +1,48 @@
-
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import * as Font from 'expo-font';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../firebaseConfig';
+import Icon from 'react-native-vector-icons/Ionicons'; 
 
 const LiveMatches = () => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [data, setData] = useState({
-    match: "Test 3 of 3 (ENG leads 2-0) - Ends of day 1",
-    status: "Live",
-    team1: "New Zealand",
-    score1: "315/9 (82)",
-    team2: "England",
-    score2: "Yet to bat",
-    note: "ENG chose to bowl",
-    championship: "T20 Men's Championship",
-  });
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { matchId, updatedMatchData } = route.params || {};
 
-  const navigation = useNavigation(); 
+  const [matchData, setMatchData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        OpenSans: require('../../../assets/fonts/OpenSans-Regular.ttf'),
-        OpenSansBold: require('../../../assets/fonts/OpenSans-Bold.ttf'),
-      });
-      setFontsLoaded(true);
-    };
+    if (updatedMatchData) {
+      setMatchData(updatedMatchData);
+      setLoading(false);
+    } else if (matchId) {
+      const matchDocRef = doc(db, 'matches', matchId);
 
-    loadFonts();
-  }, []);
+      const unsubscribe = onSnapshot(
+        matchDocRef,
+        (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            setMatchData(docSnapshot.data());
+          } else {
+            console.log('No such match exists!');
+          }
+          setLoading(false);
+        },
+        (error) => {
+          console.error('Error fetching match data:', error);
+          setLoading(false);
+        }
+      );
 
-  if (!fontsLoaded) {
+      return () => unsubscribe(); 
+    } else {
+      setLoading(false);
+    }
+  }, [matchId, updatedMatchData]);
+
+  if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#13808B" />
@@ -47,40 +58,51 @@ const LiveMatches = () => {
           source={require('../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
         />
-        <Text style={styles.header}>CurrentMatches</Text>
+        <Text style={styles.header}>Current Matches</Text>
       </View>
 
-      <View style={styles.card}>
-        <View style={styles.teamsContainer}>
-          <Text style={styles.title}>{data.match}</Text>
-          <Text style={styles.status}>{data.status}</Text>
+      {matchData ? (
+        <View style={styles.card}>
+          <View style={styles.teamsContainer}>
+            <Text style={styles.title}>{matchData.matchName || 'Match Name Unavailable'}</Text>
+            <View style={styles.statusContainer}>
+              <Icon name="radio-button-on" size={14} color="#03CAAA" />
+              <Text style={styles.status}>{matchData.status || 'Unknown Status'}</Text>
+            </View>
+          </View>
+          <View style={styles.teamsContainer}>
+            <Icon name="shirt" size={18} color="#fff" />
+            <Text style={styles.team}>{matchData.battingTeam || 'Batting Team'}</Text>
+            <Text style={styles.score}>
+              {matchData.score?.runs || 0}/{matchData.score?.wickets || 0}
+            </Text>
+          </View>
+          <View style={styles.teamsContainer}>
+            <Icon name="shield" size={18} color="#fff" />
+            <Text style={styles.team}>{matchData.bowlingTeam || 'Bowling Team'}</Text>
+            <Text style={styles.score}>
+              {matchData.score?.overs || '0.0'} overs
+            </Text>
+          </View>
+          <Text style={styles.note}>
+            <Icon name="information-circle" size={16} color="#fff" />{' '}
+            {matchData.note || 'Additional Information'}
+          </Text>
         </View>
-        <View style={styles.teamsContainer}>
-          <Text style={styles.team}>{data.team1}</Text>
-          <Text style={styles.score}>{data.score1}</Text>
-        </View>
-        <View style={styles.teamsContainer}>
-          <Text style={styles.team}>{data.team2}</Text>
-          <Text style={styles.score}>{data.score2}</Text>
-        </View>
+      ) : (
+        <Text style={styles.noData}>No match data found!</Text>
+      )}
 
-        <Text style={styles.note}>{data.note}</Text>
-        <Text style={styles.championship}>{data.championship}</Text>
-      </View>
-
-      <TouchableOpacity 
-        style={styles.viewDetailsButton} 
-        onPress={() => navigation.navigate('MatchForm')}
+      <TouchableOpacity
+        style={styles.updateButton}
+        onPress={() => navigation.navigate('MatchUpdateScreen', { matchId, updatedMatchData: matchData })}
       >
-        <Text style={styles.viewDetailsText}>Update</Text>
+        <Icon name="create" size={16} color="#fff" />
+        <Text style={styles.updateButtonText}> Update Match</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-export default LiveMatches;
-
-// Add your existing styles here.
 
 const styles = StyleSheet.create({
   container: {
@@ -118,27 +140,33 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     color: '#fff',
   },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -200,
+  },
   status: {
     fontSize: 14,
     fontFamily: 'OpenSansBold',
     color: '#03CAAA',
-    marginLeft: 10,
+    marginLeft: 5,
   },
   teamsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginVertical: 5,
   },
   team: {
     fontSize: 16,
     fontFamily: 'OpenSansBold',
     color: '#fff',
+    marginRight: 200,
   },
   score: {
     fontSize: 18,
     fontFamily: 'OpenSansBold',
     color: '#7C000E',
-
   },
   note: {
     fontSize: 14,
@@ -146,25 +174,28 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginVertical: 5,
   },
-  championship: {
-    fontSize: 12,
-    fontFamily: 'OpenSans',
-    color: '#fff',
-    marginBottom: 10,
-    marginTop: 5,
+  noData: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#7C000E',
   },
-  viewDetailsButton: {
+  updateButton: {
+    flexDirection: 'row',
     backgroundColor: '#7C000E',
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     alignSelf: 'flex-end',
     marginRight: 10,
   },
-  viewDetailsText: {
+  updateButtonText: {
     color: 'white',
     fontSize: 14,
     fontFamily: 'OpenSansBold',
+    marginLeft: 5,
   },
 });
 
+export default LiveMatches;

@@ -13,10 +13,11 @@ import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth"; // Import required methods
-
+import { FontAwesome5 } from "@expo/vector-icons";
 const AdminLoginScreen = () => {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState("");
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -119,14 +120,27 @@ const AdminLoginScreen = () => {
         autoCapitalize="none"
         keyboardType="email-address"
       />
+     <View style={styles.inputContainer}>
       <TextInput
-        style={styles.input}
+        // style={styles.input}
         placeholder="Password"
         placeholderTextColor="#fff"
-        secureTextEntry
+        secureTextEntry={!showPassword}
         value={password}
         onChangeText={setPassword}
       />
+      <TouchableOpacity
+        style={styles.eyeIcon}
+        onPress={() => setShowPassword(!showPassword)}
+      >
+              <FontAwesome5
+          name={showPassword ? "eye-slash" : "eye"}
+          size={20}
+          color="#fff"
+        />
+      </TouchableOpacity>
+
+    </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
         {loading ? (
           <ActivityIndicator size="small" color="green" />
@@ -158,12 +172,31 @@ const styles = StyleSheet.create({
     color: "#008080",
     marginBottom: 40,
   },
+  inputContainer: {
+    width: "80%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#fff",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    // backgroundColor: "#13808B",
+    marginBottom: 10,
+    color: "#fff",
+
+  },
+
+  eyeIcon: {
+    marginLeft: 150,
+  },
   input: {
     width: "80%",
     height: 50,
     borderColor: "#fff",
     borderWidth: 1,
     borderRadius: 8,
+    paddingVertical: 8,
+
     paddingHorizontal: 10,
     marginBottom: 20,
     color: "#fff",

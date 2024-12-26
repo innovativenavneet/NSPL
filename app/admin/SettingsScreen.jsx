@@ -11,9 +11,17 @@ const SettingsScreen = () => {
     navigation.navigate('AdminScreen'); 
   };
 
-  const handleOtherAction = (actionName) => {
+  const handleProfile = () => {
+    navigation.navigate('AdminFooter'); 
+
     // Handle other settings actions
-    console.log(`${actionName} clicked`);
+    console.log(` AdminFooter clicked`);
+  };
+  const ChangePassword = () => {
+    navigation.navigate('ForgotPasswordScreen'); 
+
+    // Handle other settings actions
+    console.log(`ForgotPasswordScreen clicked`);
   };
 
   return (
@@ -23,7 +31,7 @@ const SettingsScreen = () => {
       {/* Profile Section */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => handleOtherAction('Profile')}
+        onPress={handleProfile}
       >
         <Text style={styles.buttonText}>Profile</Text>
       </TouchableOpacity>
@@ -31,7 +39,7 @@ const SettingsScreen = () => {
       {/* Change Password Section */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => handleOtherAction('Change Password')}
+        onPress={ChangePassword}
       >
         <Text style={styles.buttonText}>Change Password</Text>
       </TouchableOpacity>
@@ -47,14 +55,14 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#006D75',
+    backgroundColor: '#BBBDB3',
     padding: 16,
     justifyContent: 'center',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#006D75',
     textAlign: 'center',
     marginBottom: 20,
   },
