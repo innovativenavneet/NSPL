@@ -1,16 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const MatchHighlights = () => {
   const matchData = [
     {
-      match: "India vs Pakistan",
-      youtubeLink: "https://www.youtube.com/watch?v=WQdqgrWvy6g&ab_channel=AsianCricketCouncil", // Replace with actual YouTube link
+      match: "Madhya Pradesh Vs Uttarakhand",
+      youtubeLink: "https://www.youtube.com/watch?v=QB-duA7lrLc&ab_channel=NAYABSPORTSPLAYER%27SLEAGUE",
     },
     {
-      match: "India vs Sri Lanka",
-      youtubeLink: "https://www.youtube.com/watch?v=vdNrPdeEuYQ&ab_channel=AsianCricketCouncil", // Replace with actual YouTube link
-    }
+      match: "Jharkhand Vs Chattisgarh",
+      youtubeLink: "https://www.youtube.com/watch?v=vMk0G2Xg7zU&ab_channel=NAYABSPORTSPLAYER%27SLEAGUE",
+    },
   ];
 
   const openYoutubeLink = (url) => {
@@ -20,10 +21,11 @@ const MatchHighlights = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Image
+      <FontAwesome5 name="play-circle" size={30} color="#7C000E" />
+        {/* <Image
           source={require('../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
-        />
+        /> */}
         <Text style={styles.header}>Match Highlights</Text>
       </View>
 
@@ -37,10 +39,12 @@ const MatchHighlights = () => {
             onPress={() => openYoutubeLink(match.youtubeLink)}
           >
             <Image
-              source={require('../../../assets/startingflow/highlights.png')} 
+              source={require('../../../assets/startingflow/highlights.png')}
               style={styles.youtubeIcon}
             />
-            <Text style={styles.viewDetailsText}>View Highlights on YouTube</Text>
+            <Text style={styles.viewDetailsText}>
+              <FontAwesome5 name="play-circle" size={16} color="white" /> View Highlights on YouTube
+            </Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -67,12 +71,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'OpenSansBold',
     color: '#000',
+    fontWeight: "bold",
+    marginVertical: 10,
+    marginHorizontal: 10,
   },
   card: {
     backgroundColor: '#13808B',
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   match: {
     marginBottom: 10,

@@ -12,6 +12,7 @@ import MatchUpdateScreen from "../admin/MatchUpdateScreen";
 import PlayerScoreScreens from "../admin/PlayerScoreScreens";
 import BallSelectionScreen from "../admin/BallSelectionScreen";
 import LiveScoreScreen from "../admin/Cards/CurrentMatches"; // Ensure you import this
+import MatchCreateScreen from "../admin/Cards/UpcomingMatches/UpcomingMatches";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -50,7 +51,11 @@ function HomeStackScreen({ route }) {
         component={PlayerScoreScreens}
         options={{ headerShown: false }}
       />
-
+    <HomeStack.Screen
+        name="MatchCreateScreen"
+        component={MatchCreateScreen}
+        options={{ headerShown: false }}
+      />
       {/* Live Score */}
       <HomeStack.Screen
         name="LiveScoreScreen"

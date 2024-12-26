@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'OpenSansBold',
     color: '#000',
+    fontWeight: "bold",
+
   },
   card: {
     backgroundColor: '#13808B',

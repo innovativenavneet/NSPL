@@ -4,7 +4,7 @@ import Header from "../tabs/HeaderAdmin";
 import CurrentMatches from './Cards/CurrentMatches';
 import UpcomingMatches from './Cards/UpcomingMatches/UpcomingMatches';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import MatchHighlights from './Cards/MatchHighlights';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function HomeScreen({ route }) {
@@ -13,6 +13,8 @@ export default function HomeScreen({ route }) {
   const data = [
     { key: '1', component: <CurrentMatches matchId={matchId} matchType={matchType} ballType={ballType} updatedMatchData={updatedMatchData}/> }, // Pass each prop individually
     { key: '2', component: <UpcomingMatches /> },
+    { key: '3', component: <MatchHighlights /> },
+
   ];
 
   const renderItem = ({ item }) => (
@@ -22,7 +24,7 @@ export default function HomeScreen({ route }) {
   );
 
   return (
-    <ScrollView>
+   
    <View style={styles.container}>
       <Header />
       <View>
@@ -37,7 +39,7 @@ export default function HomeScreen({ route }) {
         contentContainerStyle={styles.listContainer}
       />
     </View>
-    </ScrollView>
+   
  
   );
 }
