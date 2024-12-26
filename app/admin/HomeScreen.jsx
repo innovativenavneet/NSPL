@@ -5,6 +5,7 @@ import CurrentMatches from './Cards/CurrentMatches';
 import UpcomingMatches from './Cards/UpcomingMatches/UpcomingMatches';
 import { ScrollView } from 'react-native-gesture-handler';
 import MatchHighlights from './Cards/MatchHighlights';
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function HomeScreen({ route }) {

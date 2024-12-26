@@ -51,23 +51,6 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 
       <Stack.Navigator>
-        {/* {isAdmin ? (
-          <Stack.Screen
-            name="AdminStack"
-            component={AdminStack}  
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="UserStack"
-            options={{ headerShown: false }}
-          >
-            {() => (
-              <UserStack onAdminAccess={() => setIsAdmin(true)} />  // Pass function to toggle admin
-            )}
-          </Stack.Screen>
-        )} */}
-
         <Stack.Screen
             name="UserStack"
             component={UserStack}  

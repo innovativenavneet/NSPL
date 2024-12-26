@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const LiveMatches = () => {
   const navigation = useNavigation();
@@ -13,34 +14,35 @@ const LiveMatches = () => {
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (updatedMatchData) {
-      setMatchData(updatedMatchData);
-      setLoading(false);
-    } else if (matchId) {
+  const fetchMatchData = async () => {
+    setLoading(true);
+    if (matchId) {
       const matchDocRef = doc(db, 'matches', matchId);
-
-      const unsubscribe = onSnapshot(
-        matchDocRef,
-        (docSnapshot) => {
-          if (docSnapshot.exists()) {
-            setMatchData(docSnapshot.data());
-          } else {
-            console.log('No such match exists!');
-          }
-          setLoading(false);
-        },
-        (error) => {
-          console.error('Error fetching match data:', error);
-          setLoading(false);
+      try {
+        const docSnapshot = await getDoc(matchDocRef);
+        if (docSnapshot.exists()) {
+          setMatchData(docSnapshot.data());
+        } else {
+          console.log('No such match exists!');
         }
-      );
-
-      return () => unsubscribe(); 
-    } else {
-      setLoading(false);
+      } catch (error) {
+        console.error('Error fetching match data:', error);
+      }
     }
-  }, [matchId, updatedMatchData]);
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Re-fetch match data when screen comes into focus
+      if (matchId) {
+        fetchMatchData();
+      } else if (updatedMatchData) {
+        setMatchData(updatedMatchData);
+        setLoading(false);
+      }
+    }, [matchId, updatedMatchData])
+  );
 
   if (loading) {
     return (
@@ -93,13 +95,23 @@ const LiveMatches = () => {
         <Text style={styles.noData}>No match data found!</Text>
       )}
 
-      <TouchableOpacity
-        style={styles.updateButton}
-        onPress={() => navigation.navigate('MatchUpdateScreen', { matchId, updatedMatchData: matchData })}
-      >
-        <Icon name="create" size={16} color="#fff" />
-        <Text style={styles.updateButtonText}> Update Match</Text>
-      </TouchableOpacity>
+      {matchData ? (
+        <TouchableOpacity
+          style={styles.updateButton}
+          onPress={() => navigation.navigate('MatchUpdateScreen', { matchId, updatedMatchData: matchData })}
+        >
+          <Icon name="create" size={16} color="#fff" />
+          <Text style={styles.updateButtonText}> Update Match</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.updateButton}
+          onPress={() => navigation.navigate('MatchAddScreen')}
+        >
+          <Icon name="add-circle" size={16} color="#fff" />
+          <Text style={styles.updateButtonText}> Add Match</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

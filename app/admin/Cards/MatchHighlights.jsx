@@ -43,7 +43,7 @@ const MatchHighlights = () => {
               style={styles.youtubeIcon}
             />
             <Text style={styles.viewDetailsText}>
-              <FontAwesome5 name="play-circle" size={16} color="white" /> View Highlights on YouTube
+              <FontAwesome5 name="play-circle" size={18} color="#7C000E" /> View Highlights on YouTube
             </Text>
           </TouchableOpacity>
         </View>
