@@ -1,201 +1,231 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TextInput,
-  FlatList,
   StyleSheet,
   TouchableOpacity,
+  TextInput,
   Modal,
-  Button,
+  ScrollView,
+  Alert,
+  Image,
 } from "react-native";
+import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+import { db } from "../../firebaseConfig"; // Update the import based on your project structure
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const App = () => {
-  const [searchText, setSearchText] = useState("");
-  const [players, setPlayers] = useState([
-    {
-      name: "John Doe",
-      role: "Batsman",
-      keyStats: "800 Runs, 20 Wickets",
-      status: "Active",
-      born: "24 July, 1992 (32 Years)",
-    },
-    {
-      name: "Jane Smith",
-      role: "Bowler",
-      keyStats: "150 Wickets, 100 Runs",
-      status: "Active",
-      born: "15 August, 1990 (33 Years)",
-    },
-    {
-      name: "Michael Johnson",
-      role: "All-rounder",
-      keyStats: "500 Runs, 50 Wickets",
-      status: "Inactive",
-      born: "10 March, 1988 (35 Years)",
-    },
-  ]);
-
+const PlayerManagement = () => {
+  const [players, setPlayers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [newPlayer, setNewPlayer] = useState({
     name: "",
-    role: "",
-    keyStats: "",
-    status: "",
-    born: "",
+    runs: "",
+    ballsFaced: "",
+    strikeRate: "",
+    photo: null,
+    status: "Yet To Bat", // Default status
   });
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(null);
-const filteredPlayers = players.filter((player) => {
-    const lowerCaseSearchText = searchText.toLowerCase();
-    return (
-      player.name.toLowerCase().includes(lowerCaseSearchText) ||
-      player.role.toLowerCase().includes(lowerCaseSearchText) ||
-      player.status.toLowerCase().includes(lowerCaseSearchText)
-    );
-  });
-  
 
-  const openModalForAdd = () => {
-    setNewPlayer({
-      name: "",
-      role: "",
-      keyStats: "",
-      status: "",
-      born: "",
-    });
-    setIsUpdating(false);
-    setModalVisible(true);
-  };
-
-  const openModalForUpdate = (player, index) => {
-    setNewPlayer(player);
-    setIsUpdating(true);
-    setCurrentIndex(index);
-    setModalVisible(true);
-  };
-
-  const addOrUpdatePlayer = () => {
-    if (isUpdating) {
-      // Update player details
-      const updatedPlayers = [...players];
-      updatedPlayers[currentIndex] = newPlayer;
-      setPlayers(updatedPlayers);
-    } else {
-      // Add a new player
-      setPlayers([...players, newPlayer]);
+  // Fetch players from Firestore
+  const fetchPlayers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "players"));
+      const fetchedPlayers = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPlayers(fetchedPlayers);
+    } catch (error) {
+      console.error("Error fetching players:", error);
     }
-    setModalVisible(false);
   };
+
+  useEffect(() => {
+    fetchPlayers();
+  }, []);
+
+  // Add a new player to Firestore
+  const handleAddPlayer = async () => {
+    const { name, runs, ballsFaced, strikeRate, photo, status } = newPlayer;
+
+    if (!name || runs === "" || ballsFaced === "" || strikeRate === "") {
+      Alert.alert("Error", "Please fill out all fields.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "players"), {
+        name,
+        runs: parseInt(runs),
+        ballsFaced: parseInt(ballsFaced),
+        strikeRate: parseFloat(strikeRate),
+        photo,
+        status,
+      });
+      Alert.alert("Success", "Player added successfully!");
+      setModalVisible(false);
+      setNewPlayer({
+        name: "",
+        runs: "",
+        ballsFaced: "",
+        strikeRate: "",
+        photo: null,
+        status: "Yet To Bat",
+      });
+      fetchPlayers();
+    } catch (error) {
+      console.error("Error adding player:", error);
+    }
+  };
+
+  // Delete player from Firestore
+  const handleDeletePlayer = async (id) => {
+    try {
+      await deleteDoc(doc(db, "players", id));
+      Alert.alert("Success", "Player deleted successfully!");
+      fetchPlayers();
+    } catch (error) {
+      console.error("Error deleting player:", error);
+    }
+  };
+
+  // Pick a photo for the player
+  const pickPhoto = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert("Permission Denied", "You need to allow access to your photos.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      setNewPlayer({ ...newPlayer, photo: result.uri });
+    }
+  };
+
+  // Filter players by search text
+  const filteredPlayers = players.filter((player) =>
+    player.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.filterSearchContainer}>
+      <Text style={styles.header}>Player Management</Text>
+
+      {/* Search and Filter Section */}
+      <View style={styles.searchContainer}>
         <TouchableOpacity style={styles.filterButton}>
-          <FontAwesome5 name="filter" size={16} color="#fff" />
+          <FontAwesome5 name="filter" size={20} color="#13808B" />
         </TouchableOpacity>
-        <View style={styles.searchContainer}>
-          <FontAwesome5
-            name="search"
-            size={16}
-            color="#000"
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search"
-            value={searchText}
-            onChangeText={setSearchText}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.addPlayerButton}
-          onPress={openModalForAdd}
-        >
-          <Text style={styles.addPlayerText}>Add Player</Text>
-        </TouchableOpacity>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search players"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
       </View>
-      <FlatList
-        data={filteredPlayers}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.playerCard}>
-            <View style={styles.playerInfo}>
-              <Text style={styles.playerName}>Name: {item.name}</Text>
-              <Text style={styles.playerRole}>Role: {item.role}</Text>
-              <Text style={styles.playerStats}>Key Stats: {item.keyStats}</Text>
-              <Text style={styles.playerStatus}>Status: {item.status}</Text>
-              <Text style={styles.playerBorn}>Born: {item.born}</Text>
+
+      <ScrollView>
+        {filteredPlayers.map((player) => (
+          <View key={player.id} style={styles.card}>
+            <View style={styles.cardContent}>
+              {/* Profile Photo or Placeholder */}
+              {player.photo ? (
+                <Image source={{ uri: player.photo }} style={styles.profilePhoto} />
+              ) : (
+                <FontAwesome5 name="user-circle" size={50} color="#ccc" />
+              )}
+
+              {/* Player Details */}
+              <View style={styles.detailsContainer}>
+                <Text style={styles.name}>{player.name}</Text>
+                <Text style={styles.detail}>Runs: {player.runs}</Text>
+                <Text style={styles.detail}>Balls Faced: {player.ballsFaced}</Text>
+                <Text style={styles.detail}>Strike Rate: {player.strikeRate}</Text>
+                <Text style={styles.detail}>Status: {player.status}</Text>
+              </View>
             </View>
+
             <TouchableOpacity
-              style={styles.viewMoreButton}
-              onPress={() => openModalForUpdate(item, index)}
+              style={styles.deleteButton}
+              onPress={() => handleDeletePlayer(player.id)}
             >
-              <Text style={styles.viewMoreText}>Update Info</Text>
+              <Text style={styles.deleteButtonText}>Delete</Text>
             </TouchableOpacity>
           </View>
-        )}
-      />
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
+        ))}
+      </ScrollView>
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setModalVisible(true)}
       >
+        <Text style={styles.addButtonText}>Add Player</Text>
+      </TouchableOpacity>
+
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {isUpdating ? "Update Player Info" : "Add New Player"}
-            </Text>
+            <Text style={styles.modalHeader}>Add New Player</Text>
+
             <TextInput
-              placeholder="Name"
+              style={styles.input}
+              placeholder="Player Name"
               value={newPlayer.name}
               onChangeText={(text) => setNewPlayer({ ...newPlayer, name: text })}
-              style={styles.input}
             />
             <TextInput
-              placeholder="Role"
-              value={newPlayer.role}
-              onChangeText={(text) =>
-                setNewPlayer({ ...newPlayer, role: text })
-              }
               style={styles.input}
+              placeholder="Runs Scored"
+              value={newPlayer.runs}
+              onChangeText={(text) => setNewPlayer({ ...newPlayer, runs: text })}
+              keyboardType="numeric"
             />
             <TextInput
-              placeholder="Key Stats"
-              value={newPlayer.keyStats}
-              onChangeText={(text) =>
-                setNewPlayer({ ...newPlayer, keyStats: text })
-              }
               style={styles.input}
+              placeholder="Balls Faced"
+              value={newPlayer.ballsFaced}
+              onChangeText={(text) =>
+                setNewPlayer({ ...newPlayer, ballsFaced: text })
+              }
+              keyboardType="numeric"
             />
             <TextInput
-              placeholder="Status"
-              value={newPlayer.status}
-              onChangeText={(text) =>
-                setNewPlayer({ ...newPlayer, status: text })
-              }
               style={styles.input}
-            />
-            <TextInput
-              placeholder="Born"
-              value={newPlayer.born}
+              placeholder="Strike Rate"
+              value={newPlayer.strikeRate}
               onChangeText={(text) =>
-                setNewPlayer({ ...newPlayer, born: text })
+                setNewPlayer({ ...newPlayer, strikeRate: text })
               }
-              style={styles.input}
+              keyboardType="numeric"
             />
+
+            {/* Add Photo Button */}
+            <TouchableOpacity style={styles.photoButton} onPress={pickPhoto}>
+              <Text style={styles.photoButtonText}>
+                {newPlayer.photo ? "Change Photo" : "Add Photo"}
+              </Text>
+            </TouchableOpacity>
+
             <View style={styles.buttonContainer}>
-              <Button
-                title={isUpdating ? "Update Player" : "Add Player"}
-                onPress={addOrUpdatePlayer}
-              />
-              <Button
-                title="Cancel"
+              <TouchableOpacity
+                style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
-                color="#7C000E"
-              />
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.saveButton} onPress={handleAddPlayer}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -207,47 +237,36 @@ const filteredPlayers = players.filter((player) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#BBBDB3",
-    padding: 16,
+    padding: 20,
+    backgroundColor: '#BBBDB3',
   },
-  filterSearchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  filterButton: {
-    backgroundColor: "#13808B",
-    padding: 10,
-    borderRadius: 8,
-    marginRight: 8,
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
   },
   searchContainer: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#13808B",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 8,
+    marginBottom: 20,
+    backgroundColor: "#BBBDB3",
+    borderRadius: 10,
+    padding: 10,
+    elevation: 10,
   },
-  searchIcon: {
-    marginRight: 8,
+  filterButton: {
+    marginRight: 10,
   },
   searchInput: {
     flex: 1,
-    paddingVertical: 8,
-  },
-  addPlayerButton: {
-    backgroundColor: "#7C000E",
+    fontSize: 16,
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 10,
+    borderColor: "#CCC",
+    borderWidth: 5,
   },
-  addPlayerText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  playerCard: {
+  card: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -258,70 +277,112 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
   },
-  playerInfo: {
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profilePhoto: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 15,
+  },
+  detailsContainer: {
     flex: 1,
   },
-  playerName: {
+  name: {
     fontWeight: "bold",
     fontSize: 16,
     color: "#000",
+    marginLeft: 20,
+
   },
-  playerRole: {
+  detail: {
     fontSize: 14,
     color: "white",
+    marginLeft: 20,
   },
-  playerStats: {
-    fontSize: 14,
-    color: "white",
-  },
-  playerStatus: {
-    fontSize: 14,
-    color: "green",
-  },
-  playerBorn: {
-    fontSize: 12,
-    color: "white",
-  },
-  viewMoreButton: {
+  deleteButton: {
+    marginTop: 10,
     backgroundColor: "#7C000E",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: -60,
+    // alignItems: "center",
   },
-  viewMoreText: {
-    color: "#fff",
+  deleteButtonText: {
+    color: "#FFF",
     fontWeight: "bold",
-    fontSize: 14,
+  },
+  addButton: {
+    backgroundColor: "#13808B",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  addButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: "90%",
     backgroundColor: "#BBBDB3",
-    borderRadius: 8,
     padding: 20,
+    margin: 20,
+    borderRadius: 10,
   },
-  modalTitle: {
+  modalHeader: {
+    fontSize: 20,
     fontWeight: "bold",
-    fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#13808B",
-    borderRadius: 8,
+    borderColor: "#CCC",
+    borderRadius: 10,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  photoButton: {
+    backgroundColor: "#13808B",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  photoButtonText: {
+    color: "#FFF",
+    fontWeight: "bold",
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // backgroundColor: "13808B"
+
+  },
+  cancelButton: {
+    backgroundColor: "#7C000E",
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: "center",
+    marginRight: 10,
+  },
+  saveButton: {
+    backgroundColor: "#13808B",
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFF",
+    fontWeight: "bold",
   },
 });
 
-export default App;
+export default PlayerManagement;
