@@ -118,15 +118,6 @@ const LiveMatches = () => {
                 {match.note || "Additional Information"}
               </Text>
 
-              {/* Delete Button */}
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => deleteMatch(match.id)}
-              >
-                <Icon name="trash-bin-outline" size={16} color="#fff" />
-                <Text style={styles.deleteButtonText}> Delete</Text>
-              </TouchableOpacity>
-
               {/* Update Button */}
               <TouchableOpacity
                 style={styles.updateButton}
@@ -140,6 +131,16 @@ const LiveMatches = () => {
                 <Icon name="create-outline" size={16} color="#fff" />
                 <Text style={styles.updateButtonText}> Update Match</Text>
               </TouchableOpacity>
+              {/* Delete Button */}
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => deleteMatch(match.id)}
+              >
+                <Icon name="trash-bin-outline" size={16} color="#fff" />
+                <Text style={styles.deleteButtonText}> Delete</Text>
+              </TouchableOpacity>
+
+
             </View>
           ))
         ) : (

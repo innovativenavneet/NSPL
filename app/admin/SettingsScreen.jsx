@@ -27,7 +27,7 @@ const SettingsScreen = () => {
   };
 
   const handleProfile = () => {
-    navigation.navigate('AdminFooter'); 
+    navigation.navigate('HomeScreen'); 
     console.log('AdminFooter clicked');
   };
 
