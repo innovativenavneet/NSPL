@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     marginVertical: 410,
     color: "#fff",
     fontFamily: "OpenSansSemibold",
+    fontWeight: "bold",
   },
   onebutton: {
     position: "absolute",
@@ -115,7 +116,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   icon: { width: 25, height: 25, marginRight: 10 },
-  buttonText: { fontSize: 16, color: "#000" },
+  buttonText: { fontSize: 16, color: "#000" ,fontWeight: "bold",    fontFamily: "OpenSansSemibold",
+  },
   secondbutton: {
     position: "absolute",
     bottom: 210,

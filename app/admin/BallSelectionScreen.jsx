@@ -140,6 +140,9 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     color: "#000",
+    fontWeight: "bold",
+    fontFamily: "OpenSansSemibold",
+
   },
   secondbutton: {
     position: "absolute",
