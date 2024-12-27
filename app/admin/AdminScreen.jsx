@@ -12,8 +12,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebaseConfig";
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth"; // Import required methods
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import * as SecureStore from "expo-secure-store"; // Import SecureStore for persistence
 import { FontAwesome5 } from "@expo/vector-icons";
+
 const AdminLoginScreen = () => {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +24,6 @@ const AdminLoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
-  // Load custom fonts
   useEffect(() => {
     const loadFonts = async () => {
       try {
@@ -39,16 +40,14 @@ const AdminLoginScreen = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Wait until fonts are loaded
+    return null;
   }
 
-  // Validate email format
   const isValidEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  // Login function
   const handleLogin = async () => {
     if (!userID || !password) {
       Alert.alert("Error", "Please enter both email and password.");
@@ -63,8 +62,11 @@ const AdminLoginScreen = () => {
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, userID, password); // Updated usage
+      const userCredential = await signInWithEmailAndPassword(auth, userID, password);
       const user = userCredential.user;
+
+      // Save the UID to SecureStore (AsyncStorage is fine too)
+      await SecureStore.setItemAsync("uid", user.uid);
 
       Alert.alert("Success", "Logged in successfully!");
       navigation.navigate("AdminFooter");
@@ -81,7 +83,6 @@ const AdminLoginScreen = () => {
     }
   };
 
-  // Forgot Password Function
   const handleForgotPassword = async () => {
     if (!userID) {
       Alert.alert("Error", "Please enter your email to reset the password.");
@@ -96,11 +97,8 @@ const AdminLoginScreen = () => {
     setLoading(true);
 
     try {
-      await sendPasswordResetEmail(auth, userID); // Updated usage
-      Alert.alert(
-        "Password Reset",
-        "A password reset email has been sent to your email."
-      );
+      await sendPasswordResetEmail(auth, userID);
+      Alert.alert("Password Reset", "A password reset email has been sent to your email.");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -120,45 +118,30 @@ const AdminLoginScreen = () => {
         autoCapitalize="none"
         keyboardType="email-address"
       />
-     <View style={styles.inputContainer}>
-      <TextInput
-        // style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#fff"
-        secureTextEntry={!showPassword}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity
-        style={styles.eyeIcon}
-        onPress={() => setShowPassword(!showPassword)}
-      >
-              <FontAwesome5
-          name={showPassword ? "eye-slash" : "eye"}
-          size={20}
-          color="#fff"
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#fff"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
         />
-      </TouchableOpacity>
-
-    </View>
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={20} color="#fff" />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-        {loading ? (
-          <ActivityIndicator size="small" color="green" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
+        {loading ? <ActivityIndicator size="small" color="green" /> : <Text style={styles.buttonText}>Login</Text>}
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.forgotButton}
-        onPress={handleForgotPassword}
-        disabled={loading}
-      >
+      <TouchableOpacity style={styles.forgotButton} onPress={handleForgotPassword} disabled={loading}>
         <Text style={styles.forgotButtonText}>Forgot Password?</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

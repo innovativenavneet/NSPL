@@ -1,48 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useFocusEffect } from '@react-navigation/native';
 
 const LiveMatches = () => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const { matchId, updatedMatchData } = route.params || {};
-
-  const [matchData, setMatchData] = useState(null);
+  const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMatchData = async () => {
+  // Fetch all matches from Firestore
+  const fetchMatches = () => {
     setLoading(true);
-    if (matchId) {
-      const matchDocRef = doc(db, 'matches', matchId);
-      try {
-        const docSnapshot = await getDoc(matchDocRef);
-        if (docSnapshot.exists()) {
-          setMatchData(docSnapshot.data());
-        } else {
-          console.log('No such match exists!');
-        }
-      } catch (error) {
-        console.error('Error fetching match data:', error);
-      }
-    }
-    setLoading(false);
+    const matchesCollectionRef = collection(db, 'matches');
+    // Use onSnapshot to get real-time updates for all matches
+    onSnapshot(matchesCollectionRef, (querySnapshot) => {
+      const fetchedMatches = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMatches(fetchedMatches);
+      setLoading(false);
+    }, (error) => {
+      console.error('Error fetching match data:', error);
+      setLoading(false);
+    });
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Re-fetch match data when screen comes into focus
-      if (matchId) {
-        fetchMatchData();
-      } else if (updatedMatchData) {
-        setMatchData(updatedMatchData);
-        setLoading(false);
-      }
-    }, [matchId, updatedMatchData])
-  );
+  // Delete match from Firestore
+  const deleteMatch = (matchId) => {
+    Alert.alert(
+      "Delete Match",
+      "Are you sure you want to delete this match?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Yes", onPress: async () => {
+          try {
+            const matchDocRef = doc(db, 'matches', matchId);
+            await deleteDoc(matchDocRef);
+            setMatches(matches.filter((match) => match.id !== matchId)); // Remove match from state
+          } catch (error) {
+            console.error("Error deleting match:", error);
+          }
+        }}
+      ]
+    );
+  };
+
+  useEffect(() => {
+    fetchMatches();
+  }, []);
 
   if (loading) {
     return (
@@ -60,58 +68,71 @@ const LiveMatches = () => {
           source={require('../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
         />
-        <Text style={styles.header}>Current Matches</Text>
+        <Text style={styles.header}>Live Matches</Text>
       </View>
 
-      {matchData ? (
-        <View style={styles.card}>
-          <View style={styles.teamsContainer}>
-            <Text style={styles.title}>{matchData.matchName || 'Match Name Unavailable'}</Text>
-            <View style={styles.statusContainer}>
-              <Icon name="radio-button-on" size={14} color="#03CAAA" />
-              <Text style={styles.status}>{matchData.status || 'Unknown Status'}</Text>
-            </View>
-          </View>
-          <View style={styles.teamsContainer}>
-            <Icon name="shirt" size={18} color="#fff" />
-            <Text style={styles.team}>{matchData.battingTeam || 'Batting Team'}</Text>
-            <Text style={styles.score}>
-              {matchData.score?.runs || 0}/{matchData.score?.wickets || 0}
-            </Text>
-          </View>
-          <View style={styles.teamsContainer}>
-            <Icon name="shield" size={18} color="#fff" />
-            <Text style={styles.team}>{matchData.bowlingTeam || 'Bowling Team'}</Text>
-            <Text style={styles.score}>
-              {matchData.score?.overs || '0.0'} overs
-            </Text>
-          </View>
-          <Text style={styles.note}>
-            <Icon name="information-circle" size={16} color="#fff" />{' '}
-            {matchData.note || 'Additional Information'}
-          </Text>
-        </View>
-      ) : (
-        <Text style={styles.noData}>No match data found!</Text>
-      )}
+      <ScrollView>
+        {matches.length > 0 ? (
+          matches.map((match) => (
+            <View key={match.id} style={styles.card}>
+              <View style={styles.teamsContainer}>
+                <Text style={styles.title}>{match.matchName || 'Match Name Unavailable'}</Text>
+                <View style={styles.statusContainer}>
+                  <Icon name="radio-button-on" size={14} color="#03CAAA" />
+                  <Text style={styles.status}>{match.status || 'Unknown Status'}</Text>
+                </View>
+              </View>
+              <View style={styles.teamsContainer}>
+                <Icon name="shirt" size={18} color="#fff" />
+                <Text style={styles.team}>{match.battingTeam || 'Batting Team'}</Text>
+                <Text style={styles.score}>
+                  {match.score?.runs || 0}/{match.score?.wickets || 0}
+                </Text>
+              </View>
+              <View style={styles.teamsContainer}>
+                <Icon name="shield" size={18} color="#fff" />
+                <Text style={styles.team}>{match.bowlingTeam || 'Bowling Team'}</Text>
+                <Text style={styles.score}>
+                  {match.score?.overs || '0.0'} overs
+                </Text>
+              </View>
+              <Text style={styles.note}>
+                <Icon name="information-circle" size={16} color="#fff" />{' '}
+                {match.note || 'Additional Information'}
+              </Text>
 
-      {matchData ? (
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={() => navigation.navigate('MatchUpdateScreen', { matchId, updatedMatchData: matchData })}
-        >
-          <Icon name="create" size={16} color="#fff" />
-          <Text style={styles.updateButtonText}> Update Match</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={() => navigation.navigate('MatchAddScreen')}
-        >
-          <Icon name="add-circle" size={16} color="#fff" />
-          <Text style={styles.updateButtonText}> Add Match</Text>
-        </TouchableOpacity>
-      )}
+              {/* Delete Button */}
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => deleteMatch(match.id)}
+              >
+                <Icon name="trash-bin" size={16} color="#fff" />
+                <Text style={styles.deleteButtonText}> Delete</Text>
+              </TouchableOpacity>
+
+              {/* Update Button */}
+              <TouchableOpacity
+                style={styles.updateButton}
+                onPress={() => navigation.navigate('MatchUpdateScreen', { matchId: match.id, updatedMatchData: match })}
+              >
+                <Icon name="create" size={16} color="#fff" />
+                <Text style={styles.updateButtonText}> Update Match</Text>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noData}>No match data found!</Text>
+        )}
+      </ScrollView>
+
+      {/* Add Match Button - Always visible */}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate('BallSelectionScreen')}
+      >
+        <Icon name="add-circle" size={16} color="#fff" />
+        <Text style={styles.updateButtonText}> Add Live Match</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -141,7 +162,6 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSansBold',
     color: '#000',
     fontWeight: "bold",
-
   },
   card: {
     backgroundColor: '#13808B',
@@ -157,7 +177,6 @@ const styles = StyleSheet.create({
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: -200,
   },
   status: {
     fontSize: 14,
@@ -170,6 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 5,
+    marginHorizontal: -5,
   },
   team: {
     fontSize: 16,
@@ -193,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#7C000E',
   },
-  updateButton: {
+  deleteButton: {
     flexDirection: 'row',
     backgroundColor: '#7C000E',
     paddingVertical: 8,
@@ -203,6 +223,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'flex-end',
     marginRight: 10,
+    marginBottom: -10,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'OpenSansBold',
+    marginLeft: 5,
+  },
+  updateButton: {
+    flexDirection: 'row',
+    backgroundColor: '#7C000E',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+    marginRight: 10,
+    marginTop: -30,
+  },
+  addButton: {
+    flexDirection: 'row',
+    backgroundColor: '#7C000E',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    marginRight: 10,
+    marginBottom: -10,
   },
   updateButtonText: {
     color: 'white',

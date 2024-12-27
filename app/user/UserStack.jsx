@@ -4,6 +4,7 @@ import BallSelectionScreen from "./BallSelectionScreen";
 import MatchType from "./MatchType";
 import AdminStack from "../admin/AdminStack";
 import Footer from "../tabs/Footer";
+import AdminFooter from "../tabs/AdminFooter";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,11 @@ export default function UserStack() {
       <Stack.Screen
         name="Footer"
         component={Footer}
+        options={{ headerShown: false }}
+      />
+            <Stack.Screen
+        name="AdminFooter"
+        component={AdminFooter}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

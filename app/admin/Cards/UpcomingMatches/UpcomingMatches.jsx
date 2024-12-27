@@ -133,7 +133,7 @@ const UpcomingMatches = () => {
         onPress={() => setModalVisible(true)}
       >
         <MaterialIcons name="add-circle" size={24} color="#fff" />
-        <Text style={styles.addButtonText}>Add Match</Text>
+        <Text style={styles.addButtonText}>Add Upcoming Match</Text>
       </TouchableOpacity>
 
       {/* Modal for Adding a Match */}
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "#BBBDB3",
     padding: 20,
     borderRadius: 10,
     width: "90%",
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   cancelButton: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#7C000E",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,

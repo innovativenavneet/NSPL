@@ -13,7 +13,7 @@ import PlayerScoreScreens from "../admin/PlayerScoreScreens";
 import BallSelectionScreen from "../admin/BallSelectionScreen";
 import LiveScoreScreen from "../admin/Cards/CurrentMatches"; // Ensure you import this
 import MatchCreateScreen from "../admin/Cards/UpcomingMatches/UpcomingMatches";
-
+import MatchAddScreen from "../admin/MatchesScreen"
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
