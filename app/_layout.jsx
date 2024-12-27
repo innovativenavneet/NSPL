@@ -4,15 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import UserStack from './user/UserStack';    
+import UserStack from './user/UserStack';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 const Stack = createNativeStackNavigator();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
-  // const [isAdmin, setIsAdmin] = useState(false); 
   const [appReady, setAppReady] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -20,43 +18,42 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // async function will not block resources 
     async function prepare() {
       try {
+        // Prevent the splash screen from auto-hiding
         await SplashScreen.preventAutoHideAsync();
-        await new Promise((resolve) => setTimeout(resolve, 1000)); 
+
+        // Perform any async initialization tasks here
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Optional small delay
       } catch (e) {
         console.warn(e);
       } finally {
-        setAppReady(true);
+        setAppReady(true); // Mark app as ready
       }
     }
 
     prepare();
   }, []);
 
-  // Hide the splash screen once fonts and assets are ready
   useEffect(() => {
     if (appReady && fontsLoaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync(); // Hide splash screen once ready
     }
   }, [appReady, fontsLoaded]);
 
- 
   if (!appReady || !fontsLoaded) {
-    return null;
+    return null; // Return fallback or loader component if needed
   }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-
       <Stack.Navigator>
         <Stack.Screen
-            name="UserStack"
-            component={UserStack}  
-            options={{ headerShown: false }}
-          ></Stack.Screen>
+          name="UserStack"
+          component={UserStack}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
-</ThemeProvider>
+    </ThemeProvider>
   );
 }

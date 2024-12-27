@@ -4,7 +4,7 @@
     "slug": "nspl-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/splash-icon.png",
+    "icon": "./assets/images/logo.png",  
     "resizeMode": "cover",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -12,30 +12,30 @@
     "ios": {
       "supportsTablet": true,
       "splash": {
-        "image": "./assets/images/splash-icon.png",
-        "resizeMode": "cover",
-        "backgroundColor": "#ffffff"
+        "image": "./assets/images/splash-icon.png", 
+        "resizeMode": "contain",  
+        "backgroundColor": "#1E2032"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/logo.png",  
+        "backgroundColor": "#1E2032"
       },
       "splash": {
-        "image": "./assets/images/splash-icon.png",
-        "resizeMode": "cover",
-        "backgroundColor": "#ffffff"
+        "image": "./assets/images/splash-icon.png",  
+        "resizeMode": "contain",  
+        "backgroundColor": "#1E2032"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png",
+      "favicon": "./assets/images/logo.png",  
       "splash": {
-        "image": "./assets/images/splash-icon.png",
-        "resizeMode": "cover",
-        "backgroundColor": "#ffffff"
+        "image": "./assets/images/splash-icon.png",  
+        "resizeMode": "contain", 
+        "backgroundColor": "#1E2032"
       }
     },
     "plugins": [
@@ -43,9 +43,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
+          "image": "./assets/images/splash-icon.png",  
+          "resizeMode": "contain",  
+          "backgroundColor": "#1E2032"
         }
       ],
       "expo-font"
