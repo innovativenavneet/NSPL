@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const MatchHighlights = () => {
@@ -15,17 +15,13 @@ const MatchHighlights = () => {
   ];
 
   const openYoutubeLink = (url) => {
-    Linking.openURL(url).catch(err => console.error("Failed to open URL:", err));
+    Linking.openURL(url).catch((err) => console.error("Failed to open URL:", err));
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-      <FontAwesome5 name="play-circle" size={30} color="#7C000E" />
-        {/* <Image
-          source={require('../../../assets/startingflow/CricketBall.png')}
-          style={styles.logo}
-        /> */}
+        <FontAwesome5 name="play-circle" size={30} color="#7C000E" />
         <Text style={styles.header}>Match Highlights</Text>
       </View>
 
@@ -38,12 +34,14 @@ const MatchHighlights = () => {
             style={styles.youtubeButton}
             onPress={() => openYoutubeLink(match.youtubeLink)}
           >
-            <Image
-              source={require('../../../assets/startingflow/highlights.png')}
+            <FontAwesome5
+              name="play-circle"
+              size={50}
+              color="#f0f0f0"
               style={styles.youtubeIcon}
             />
             <Text style={styles.viewDetailsText}>
-              <FontAwesome5 name="play-circle" size={16} color="#7C000E" /> View Highlights on YouTube
+              View Highlights on YouTube
             </Text>
           </TouchableOpacity>
         </View>
@@ -60,26 +58,20 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  logo: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
+    marginBottom: 20,
   },
   header: {
     fontSize: 20,
     fontFamily: 'OpenSansBold',
     color: '#000',
     fontWeight: "bold",
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginLeft: 10,
   },
   card: {
     backgroundColor: '#13808B',
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 15,
   },
   match: {
     marginBottom: 10,
@@ -88,25 +80,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'OpenSans',
     color: '#fff',
+    flexWrap: 'wrap', // Ensure long match names wrap correctly
   },
   youtubeButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 15,
-    borderRadius: 5,
+    borderRadius: 50,
+    backgroundColor: '#C6011F', // To make the button stand out
     marginTop: 10,
+    maxWidth: Dimensions.get('window').width - 40, // Avoid overflow
   },
   youtubeIcon: {
-    width: 100,
-    height: 60,
-    marginRight: 10,
-    borderRadius: 10,
+    marginRight: 15,
   },
   viewDetailsText: {
     color: 'white',
     fontSize: 14,
     fontFamily: 'OpenSansBold',
+    flexShrink: 1,  // Ensures text wraps and doesn't overflow
+    textAlign: 'left',
   },
 });
 

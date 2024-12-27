@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Font from 'expo-font';
@@ -40,29 +40,34 @@ export default function BallSelectionScreen({ onAdminAccess }) {
         </TouchableOpacity>    
       </View>
 
-      {/* First button for Women's Match */}
-      <View style={styles.onebutton}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Footer',{ ballType, matchType: "Women's Match" })} // Navigate to Footer screen
-        >
-          <Text style={styles.buttonText}>Women's Match</Text>
-        </TouchableOpacity>
-        <Image source={require('../../assets/startingflow/Women.png')} style={styles.women} />
-      </View>
+      {/* Scrollable Content */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-      <Text style={styles.question}>Which type of Match do you want to see?</Text>
+        {/* First button for Women's Match */}
+        <View style={styles.onebutton}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Footer', { ballType, matchType: "Women's Match" })} // Navigate to Footer screen
+          >
+            <Text style={styles.buttonText}>Women's Match</Text>
+          </TouchableOpacity>
+          <Image source={require('../../assets/startingflow/Women.png')} style={styles.women} />
+        </View>
 
-      {/* Second button for Men's Match */}
-      <View style={styles.secondbutton}>
-        <Image source={require('../../assets/startingflow/Men.png')} style={styles.men} />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Footer',{ ballType, matchType: "Men's Match" })} // Navigate to Footer screen
-        >
-          <Text style={styles.buttonText}>Men's Match</Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.question}>Which type of Match do you want to see?</Text>
+
+        {/* Second button for Men's Match */}
+        <View style={styles.secondbutton}>
+          <Image source={require('../../assets/startingflow/Men.png')} style={styles.men} />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Footer', { ballType, matchType: "Men's Match" })} // Navigate to Footer screen
+          >
+            <Text style={styles.buttonText}>Men's Match</Text>
+          </TouchableOpacity>
+        </View>
+        
+      </ScrollView>
     </LinearGradient>
   );
 }
@@ -70,6 +75,11 @@ export default function BallSelectionScreen({ onAdminAccess }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1, // Allow the content to take up available space
+    justifyContent: 'center', // Center content vertically
+    paddingBottom: 20, // Padding at the bottom for spacing
   },
   header: {
     position: 'absolute',
@@ -79,6 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    zIndex: 10, // Ensure the header stays on top
   },
   logo: {
     width: 50,
@@ -89,21 +100,21 @@ const styles = StyleSheet.create({
     height: 50,
   },
   question: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: 410,
-    color: '#fff',
-    fontFamily: 'OpenSansSemibold',
+    fontSize: 24, // Slightly larger font size for better visibility
+    textAlign: "center",
+    color: "#fff", // Ensure text color is visible
+    fontFamily: "OpenSansSemibold",
+    fontWeight: "bold",
+    marginTop: 80, // Adjust for better positioning
+    marginBottom: 40, // Add margin to space out text
+    paddingHorizontal: 20, // Padding for responsiveness
   },
   onebutton: {
-    position: 'absolute',
-    top: 180, // 10px below header (header top + height + 10px)
-    left: 0,
-    right: 0,
     alignItems: 'center',
+    marginTop: 100, // Space the button down from the top
   },
   women: {
-    marginTop: 30,
+    marginTop: 20,
   },
   men: {
     marginBottom: 30,
@@ -117,6 +128,7 @@ const styles = StyleSheet.create({
     width: 200,
     justifyContent: 'center',
     elevation: 10,
+    marginBottom: 20, // Space out the buttons
   },
   icon: {
     width: 20,
@@ -128,10 +140,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   secondbutton: {
-    position: 'absolute',
-    bottom: 180, // 30px above the bottom
-    left: 0,
-    right: 0,
     alignItems: 'center',
   },
 });

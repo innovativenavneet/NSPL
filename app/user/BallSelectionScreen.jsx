@@ -91,13 +91,18 @@ const styles = StyleSheet.create({
   logo: { width: 50, height: 50 },
   userIcon: { width: 50, height: 50 },
   question: {
-    fontSize: 20,
+    fontSize: 24, // Slightly larger font size for better visibility
     textAlign: "center",
-    marginVertical: 410,
-    color: "#fff",
+    color: "#fff", // Ensure text color is visible
     fontFamily: "OpenSansSemibold",
     fontWeight: "bold",
-  },
+    flex: 1, // Use Flexbox to take up space and align in the center
+    justifyContent: "center", // Vertically center the text
+    alignItems: "center", // Horizontally center the text
+    marginTop: "70%", // Adjust if necessary based on layout
+    paddingHorizontal: 20, // Add padding for better spacing on smaller screens
+  },  
+  
   onebutton: {
     position: "absolute",
     top: 180,

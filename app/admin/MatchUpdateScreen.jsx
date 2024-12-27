@@ -78,9 +78,8 @@ const MatchUpdateScreen = () => {
     }
   };
 
-
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Match Update</Text>
 
       {/* Teams and Score Information */}
@@ -237,7 +236,7 @@ const MatchUpdateScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#006D75',
     padding: 16,
   },

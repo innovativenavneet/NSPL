@@ -119,6 +119,7 @@ const AdminLoginScreen = () => {
       />
       <View style={styles.inputContainer}>
         <TextInput
+          style={styles.passwordInput}
           placeholder="Password"
           placeholderTextColor="#fff"
           secureTextEntry={!showPassword}
@@ -162,20 +163,6 @@ const styles = StyleSheet.create({
     color: "#008080",
     marginBottom: 40,
   },
-  inputContainer: {
-    width: "80%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#fff",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  eyeIcon: {
-    position: "absolute",
-    right: 10,
-  },
   input: {
     width: "80%",
     height: 50,
@@ -186,6 +173,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 20,
     color: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.2)", // Semi-transparent background
+  },
+  inputContainer: {
+    width: "80%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#fff",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)", // Input container background
+  },
+  passwordInput: {
+    flex: 1, // Ensures the input takes available space
+    height: 50,
+    color: "#fff",
+    paddingHorizontal: 10,
+  },
+  eyeIcon: {
+    padding: 5, // Increase tappable area
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle background for the button
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
     width: "80%",
@@ -195,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     marginTop: 10,
-    flexDirection: "row", 
+    flexDirection: "row",
     paddingHorizontal: 10,
   },
   buttonContent: {
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#008080",
-    marginLeft: 10, // Add space between icon and text
+    marginLeft: 10,
   },
   forgotButton: {
     marginTop: 15,

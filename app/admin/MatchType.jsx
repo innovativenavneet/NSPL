@@ -91,63 +91,75 @@ export default function HandleMatchTypeSelection() {
     </LinearGradient>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContainer: {
+    flexGrow: 1, // Allow the content to take up available space
+    justifyContent: 'center', // Center content vertically
+    paddingBottom: 20, // Padding at the bottom for spacing
+  },
   header: {
-    position: "absolute",
+    position: 'absolute',
     top: 40,
     left: 20,
     right: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 10, // Ensure the header stays on top
   },
   logo: {
     width: 50,
     height: 50,
   },
+  userIcon: {
+    width: 50,
+    height: 50,
+  },
   question: {
-    fontSize: 20,
+    fontSize: 24, // Slightly larger font size for better visibility
     textAlign: "center",
-    marginVertical: 410,
-    color: "#fff",
+    color: "#fff", // Ensure text color is visible
     fontFamily: "OpenSansSemibold",
+    fontWeight: "bold",
+    marginTop: 80, // Adjust for better positioning
+    marginBottom: 40, // Add margin to space out text
+    paddingHorizontal: 20, // Padding for responsiveness
   },
   onebutton: {
-    position: "absolute",
-    top: 180,
-    left: 0,
-    right: 0,
-    alignItems: "center",
+    alignItems: 'center',
+    marginTop: 100, // Space the button down from the top
   },
   women: {
-    marginTop: 30,
+    marginTop: 20,
   },
   men: {
     marginBottom: 30,
   },
   button: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 20,
     width: 200,
-    justifyContent: "center",
+    justifyContent: 'center',
     elevation: 10,
+    marginBottom: 20, // Space out the buttons
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   buttonText: {
     fontSize: 16,
-    color: "#000",
+    color: '#000',
   },
   secondbutton: {
-    position: "absolute",
-    bottom: 180,
-    left: 0,
-    right: 0,
-    alignItems: "center",
+    alignItems: 'center',
   },
 });
+

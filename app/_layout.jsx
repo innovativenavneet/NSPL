@@ -24,7 +24,7 @@ export default function RootLayout() {
         await SplashScreen.preventAutoHideAsync();
 
         // Perform any async initialization tasks here
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Optional small delay
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Optional small delay
       } catch (e) {
         console.warn(e);
       } finally {

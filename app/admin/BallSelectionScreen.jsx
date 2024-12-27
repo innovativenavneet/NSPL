@@ -88,9 +88,7 @@ export default function BallSelectionScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   header: {
     position: "absolute",
     top: 40,
@@ -100,21 +98,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  userIcon: {
-    width: 50,
-    height: 50,
-  },
+  logo: { width: 50, height: 50 },
+  userIcon: { width: 50, height: 50 },
   question: {
-    fontSize: 20,
+    fontSize: 24, // Slightly larger font size for better visibility
     textAlign: "center",
-    marginVertical: 350,
-    color: "#fff",
+    color: "#fff", // Ensure text color is visible
     fontFamily: "OpenSansSemibold",
-  },
+    fontWeight: "bold",
+    flex: 1, // Use Flexbox to take up space and align in the center
+    justifyContent: "center", // Vertically center the text
+    alignItems: "center", // Horizontally center the text
+    marginTop: "70%", // Adjust if necessary based on layout
+    paddingHorizontal: 20, // Add padding for better spacing on smaller screens
+  },  
+  
   onebutton: {
     position: "absolute",
     top: 180,
@@ -132,17 +130,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     elevation: 10,
   },
-  icon: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "#000",
-    fontWeight: "bold",
-    fontFamily: "OpenSansSemibold",
-
+  icon: { width: 25, height: 25, marginRight: 10 },
+  buttonText: { fontSize: 16, color: "#000" ,fontWeight: "bold",    fontFamily: "OpenSansSemibold",
   },
   secondbutton: {
     position: "absolute",
