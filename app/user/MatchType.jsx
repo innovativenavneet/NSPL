@@ -50,19 +50,21 @@ export default function BallSelectionScreen({ onAdminAccess }) {
             onPress={() => navigation.navigate('Footer', { ballType, matchType: "Women's Match" })} // Navigate to Footer screen
           >
             <Text style={styles.buttonText}>Women's Match</Text>
+            <Image source={require('../../assets/startingflow/Women.png')} style={styles.women} />
+
           </TouchableOpacity>
-          <Image source={require('../../assets/startingflow/Women.png')} style={styles.women} />
         </View>
 
         <Text style={styles.question}>Which type of Match do you want to see?</Text>
 
         {/* Second button for Men's Match */}
         <View style={styles.secondbutton}>
-          <Image source={require('../../assets/startingflow/Men.png')} style={styles.men} />
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate('Footer', { ballType, matchType: "Men's Match" })} // Navigate to Footer screen
           >
+                      <Image source={require('../../assets/startingflow/Men.png')} style={styles.men} />
+
             <Text style={styles.buttonText}>Men's Match</Text>
           </TouchableOpacity>
         </View>
