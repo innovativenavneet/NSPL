@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, requireNativeComponent, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Font from 'expo-font';
 
 export default function BallSelectionScreen({ onAdminAccess }) {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const navigation = useNavigation(); 
+  const route = useRoute();
+  const { ballType } = route.params; 
 
+  // Load fonts
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
         OpenSans: require('../../assets/fonts/OpenSans-Regular.ttf'),
-        OpenSansSemibold :require('../../assets/fonts/OpenSans_SemiCondensed-SemiBold.ttf')
+        OpenSansSemibold: require('../../assets/fonts/OpenSans_SemiCondensed-SemiBold.ttf'),
       });
       setFontsLoaded(true);
     };
@@ -21,7 +24,7 @@ export default function BallSelectionScreen({ onAdminAccess }) {
   }, []);
 
   if (!fontsLoaded) {
-    return null;
+    return null; // Avoid rendering before fonts are loaded
   }
 
   return (
@@ -29,45 +32,40 @@ export default function BallSelectionScreen({ onAdminAccess }) {
       {/* Header with logo and admin button */}
       <View style={styles.header}>
         <Image source={require('../../assets/startingflow/logo.png')} style={styles.logo} />
-   <TouchableOpacity
-          onPress={onAdminAccess}
-        >
+        <TouchableOpacity onPress={onAdminAccess}>
           <Image
-            source={require("../../assets/startingflow/human.png")}
+            source={require('../../assets/startingflow/human.png')}
             style={styles.userIcon}
           />
         </TouchableOpacity>    
-          </View>
+      </View>
 
-      {/* First button positioned 10px below the header */}
+      {/* First button for Women's Match */}
       <View style={styles.onebutton}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Footer')} // Route to Leather Match screen
+          onPress={() => navigation.navigate('Footer',{ ballType, matchType: "Women's Match" })} // Navigate to Footer screen
         >
-          
           <Text style={styles.buttonText}>Women's Match</Text>
         </TouchableOpacity>
-        <Image source={require("../../assets/startingflow/Women.png")} style={styles.women} />
+        <Image source={require('../../assets/startingflow/Women.png')} style={styles.women} />
       </View>
 
       <Text style={styles.question}>Which type of Match do you want to see?</Text>
 
-      {/* Second button positioned 30px above the bottom */}
+      {/* Second button for Men's Match */}
       <View style={styles.secondbutton}>
-      <Image source={require("../../assets/startingflow/Men.png")} style={styles.men} />
-
+        <Image source={require('../../assets/startingflow/Men.png')} style={styles.men} />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Footer')} 
+          onPress={() => navigation.navigate('Footer',{ ballType, matchType: "Men's Match" })} // Navigate to Footer screen
         >
-        
           <Text style={styles.buttonText}>Men's Match</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +94,6 @@ const styles = StyleSheet.create({
     marginVertical: 410,
     color: '#fff',
     fontFamily: 'OpenSansSemibold',
-    
   },
   onebutton: {
     position: 'absolute',
@@ -104,15 +101,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    
   },
   women: {
-  marginTop: 30,
- 
+    marginTop: 30,
   },
   men: {
     marginBottom: 30,
-
   },
   button: {
     flexDirection: 'row',
@@ -141,4 +135,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-

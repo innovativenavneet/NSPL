@@ -68,7 +68,7 @@ const LiveMatches = () => {
           source={require('../../../assets/startingflow/CricketBall.png')}
           style={styles.logo}
         />
-        <Text style={styles.header}>Live Matches</Text>
+        <Text style={styles.header}>Current Matches</Text>
       </View>
 
       <ScrollView>

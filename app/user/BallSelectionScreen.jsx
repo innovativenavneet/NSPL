@@ -1,3 +1,4 @@
+// BallSelectionScreen.js
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -6,28 +7,22 @@ import * as Font from "expo-font";
 
 export default function BallSelectionScreen({ onAdminAccess }) {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const navigation = useNavigation(); // Use navigation hook for routing
+  const navigation = useNavigation();
 
-  // Load Fonts
   useEffect(() => {
     const loadFonts = async () => {
-      try {
-        await Font.loadAsync({
-          OpenSans: require("../../assets/fonts/OpenSans-Regular.ttf"),
-          OpenSansSemibold: require("../../assets/fonts/OpenSans_SemiCondensed-SemiBold.ttf"),
-        });
-        setFontsLoaded(true);
-        console.log("Fonts loaded successfully");
-      } catch (error) {
-        console.error("Error loading fonts:", error);
-      }
+      await Font.loadAsync({
+        OpenSans: require("../../assets/fonts/OpenSans-Regular.ttf"),
+        OpenSansSemibold: require("../../assets/fonts/OpenSans_SemiCondensed-SemiBold.ttf"),
+      });
+      setFontsLoaded(true);
     };
 
     loadFonts();
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Avoid rendering until fonts are loaded
+    return null;
   }
 
   return (
@@ -38,11 +33,7 @@ export default function BallSelectionScreen({ onAdminAccess }) {
           source={require("../../assets/startingflow/logo.png")}
           style={styles.logo}
         />
-
-        {/* Admin Button */}
-        <TouchableOpacity
-          onPress={onAdminAccess}
-        >
+        <TouchableOpacity onPress={onAdminAccess}>
           <Image
             source={require("../../assets/startingflow/human.png")}
             style={styles.userIcon}
@@ -50,13 +41,12 @@ export default function BallSelectionScreen({ onAdminAccess }) {
         </TouchableOpacity>
       </View>
 
-      {/* First button */}
+      {/* Ball type buttons */}
       <View style={styles.onebutton}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log("Navigating to MatchType");
-            navigation.navigate("MatchType"); // Navigate to MatchType screen
+            navigation.navigate("MatchType", { ballType: "Leather Ball" }); // Pass ball type to MatchType screen
           }}
         >
           <Image
@@ -69,13 +59,11 @@ export default function BallSelectionScreen({ onAdminAccess }) {
 
       <Text style={styles.question}>Which type of Match do you want to see?</Text>
 
-      {/* Second button */}
       <View style={styles.secondbutton}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log("Navigating to MatchType");
-            navigation.navigate("MatchType");
+            navigation.navigate("MatchType", { ballType: "Tennis Ball" }); // Pass ball type to MatchType screen
           }}
         >
           <Image
@@ -90,9 +78,7 @@ export default function BallSelectionScreen({ onAdminAccess }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   header: {
     position: "absolute",
     top: 40,
@@ -102,14 +88,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  userIcon: {
-    width: 50,
-    height: 50,
-  },
+  logo: { width: 50, height: 50 },
+  userIcon: { width: 50, height: 50 },
   question: {
     fontSize: 20,
     textAlign: "center",
@@ -134,15 +114,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     elevation: 10,
   },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "#000",
-  },
+  icon: { width: 25, height: 25, marginRight: 10 },
+  buttonText: { fontSize: 16, color: "#000" },
   secondbutton: {
     position: "absolute",
     bottom: 210,

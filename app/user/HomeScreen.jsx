@@ -7,9 +7,11 @@ import UpcomingMatches from './Cards/UpcomingMatches/UpcomingMatches';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-export default function HomeScreen() {
+export default function HomeScreen({ route }) {
+  const {  matchType, ballType,  } = route.params || {}; 
+
   const data = [
-    { key: '1', component: <LiveMatches /> },
+    { key: '1', component: <LiveMatches  matchType={matchType} ballType={ballType}/> },
     { key: '2', component: <UpcomingMatches /> },
     { key: '3', component: <MatchHighlights /> },
   ];
