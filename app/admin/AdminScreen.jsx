@@ -13,13 +13,13 @@ import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import * as SecureStore from "expo-secure-store"; // Import SecureStore for persistence
-import { FontAwesome5 } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store"; 
+import { FontAwesome5 } from "@expo/vector-icons"; 
 
 const AdminLoginScreen = () => {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -65,7 +65,6 @@ const AdminLoginScreen = () => {
       const userCredential = await signInWithEmailAndPassword(auth, userID, password);
       const user = userCredential.user;
 
-      // Save the UID to SecureStore (AsyncStorage is fine too)
       await SecureStore.setItemAsync("uid", user.uid);
 
       Alert.alert("Success", "Logged in successfully!");
@@ -134,7 +133,14 @@ const AdminLoginScreen = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-        {loading ? <ActivityIndicator size="small" color="green" /> : <Text style={styles.buttonText}>Login</Text>}
+        {loading ? (
+          <ActivityIndicator size="small" color="green" />
+        ) : (
+          <View style={styles.buttonContent}>
+            <FontAwesome5 name="sign-in-alt" size={20} color="#008080" /> 
+            <Text style={styles.buttonText}>Login</Text>
+          </View>
+        )}
       </TouchableOpacity>
       <TouchableOpacity style={styles.forgotButton} onPress={handleForgotPassword} disabled={loading}>
         <Text style={styles.forgotButtonText}>Forgot Password?</Text>
@@ -142,6 +148,7 @@ const AdminLoginScreen = () => {
     </LinearGradient>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -163,14 +170,11 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderRadius: 8,
     paddingHorizontal: 10,
-    // backgroundColor: "#13808B",
     marginBottom: 10,
-    color: "#fff",
-
   },
-
   eyeIcon: {
-    marginLeft: 150,
+    position: "absolute",
+    right: 10,
   },
   input: {
     width: "80%",
@@ -179,7 +183,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingVertical: 8,
-
     paddingHorizontal: 10,
     marginBottom: 20,
     color: "#fff",
@@ -192,11 +195,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     marginTop: 10,
+    flexDirection: "row", 
+    paddingHorizontal: 10,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "green",
+    color: "#008080",
+    marginLeft: 10, // Add space between icon and text
   },
   forgotButton: {
     marginTop: 15,

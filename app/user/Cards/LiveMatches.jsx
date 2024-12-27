@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Scr
 import { useNavigation } from '@react-navigation/native';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
+import { MaterialIcons } from '@expo/vector-icons';  // Importing icons from Expo
 
 const LiveMatches = ({ matchType, ballType }) => {
   const [matches, setMatches] = useState([]);
@@ -67,7 +68,10 @@ const LiveMatches = ({ matchType, ballType }) => {
             <View key={match.id} style={styles.card}>
               <View style={styles.teamsContainer}>
                 <Text style={styles.title}>{match.matchName || 'Match Name Unavailable'}</Text>
-                <Text style={styles.status}>{match.status}</Text>
+                <Text style={styles.status}>
+                  <MaterialIcons name="sports-cricket" size={20} color="#03CAAA" /> 
+                  {match.status}
+                </Text>
               </View>
               <View style={styles.teamsContainer}>
                 <Text style={styles.team}>{match.battingTeam}</Text>
@@ -86,6 +90,7 @@ const LiveMatches = ({ matchType, ballType }) => {
                 style={styles.viewDetailsButton}
                 onPress={() => navigation.navigate('DetailView', { matchId: match.id })}
               >
+                <MaterialIcons name="info" size={20} color="white" />
                 <Text style={styles.viewDetailsText}>View Details</Text>
               </TouchableOpacity>
             </View>
@@ -137,6 +142,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#03CAAA',
     marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   teamsContainer: {
     flexDirection: 'row',
@@ -169,10 +176,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'flex-end',
     marginRight: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   viewDetailsText: {
     color: 'white',
     fontSize: 14,
+    marginLeft: 5,
   },
   noData: {
     textAlign: 'center',

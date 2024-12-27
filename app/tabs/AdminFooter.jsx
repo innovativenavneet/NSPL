@@ -14,6 +14,8 @@ import BallSelectionScreen from "../admin/BallSelectionScreen";
 import LiveScoreScreen from "../admin/Cards/CurrentMatches"; // Ensure you import this
 import MatchCreateScreen from "../admin/Cards/UpcomingMatches/UpcomingMatches";
 import MatchAddScreen from "../admin/MatchesScreen"
+import BallSelectionUser from "../user/BallSelectionScreen";
+
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
@@ -60,6 +62,11 @@ function HomeStackScreen({ route }) {
       <HomeStack.Screen
         name="LiveScoreScreen"
         component={LiveScoreScreen}
+        options={{ headerShown: false }}
+      />
+           <HomeStack.Screen
+        name="BallSelectionUser"
+        component={BallSelectionUser}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

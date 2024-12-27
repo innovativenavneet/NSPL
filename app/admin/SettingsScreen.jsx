@@ -1,27 +1,39 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from 'expo-router';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebaseConfig'; // Ensure the firebaseConfig is correctly set up
+import { FontAwesome5 } from '@expo/vector-icons'; // Import FontAwesome5 for icons
+import * as SecureStore from 'expo-secure-store'; // Import SecureStore
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
 
-  const handleLogout = () => {
-    // Add logout functionality here
-    console.log('User logged out');
-    navigation.navigate('AdminScreen'); 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Firebase logout
+      console.log('User logged out');
+      // Remove the uid from SecureStore
+      await SecureStore.deleteItemAsync('uid');
+      
+      // Reset to root navigation after logout
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'UserStack' }], // Change to your root screen
+      });
+    } catch (error) {
+      console.error('Error logging out:', error.message);
+    }
   };
 
   const handleProfile = () => {
     navigation.navigate('AdminFooter'); 
-
-    // Handle other settings actions
-    console.log(` AdminFooter clicked`);
+    console.log('AdminFooter clicked');
   };
+
   const ChangePassword = () => {
     navigation.navigate('ForgotPasswordScreen'); 
-
-    // Handle other settings actions
-    console.log(`ForgotPasswordScreen clicked`);
+    console.log('ForgotPasswordScreen clicked');
   };
 
   return (
@@ -29,23 +41,20 @@ const SettingsScreen = () => {
       <Text style={styles.header}>Settings</Text>
 
       {/* Profile Section */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleProfile}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleProfile}>
+        <FontAwesome5 name="user" size={20} color="#006D75" style={styles.icon} />
         <Text style={styles.buttonText}>Profile</Text>
       </TouchableOpacity>
 
       {/* Change Password Section */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={ChangePassword}
-      >
+      <TouchableOpacity style={styles.button} onPress={ChangePassword}>
+        <FontAwesome5 name="key" size={20} color="#006D75" style={styles.icon} />
         <Text style={styles.buttonText}>Change Password</Text>
       </TouchableOpacity>
 
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <FontAwesome5 name="sign-out-alt" size={20} color="#fff" style={styles.icon} />
         <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
@@ -79,6 +88,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 20,
+    flexDirection: 'row', // Align icon and text horizontally
+    alignItems: 'center', // Vertically align icon and text
+  },
+  icon: {
+    marginRight: 10, // Space between icon and text
   },
   buttonText: {
     fontSize: 16,
@@ -99,6 +113,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 20,
+    flexDirection: 'row', // Align icon and text horizontally
+    alignItems: 'center', // Vertically align icon and text
   },
   logoutButtonText: {
     fontSize: 16,
